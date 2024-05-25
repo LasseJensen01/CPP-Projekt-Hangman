@@ -9,7 +9,7 @@ string pickRandomWord();
 void printHangMan();
 bool isAWord();
 bool validGuess();
-valarray<string> array = {"Kaj", "Andrea", "Kurt", "Library", "Haj"};
+valarray<string> wordArray = {"Kaj", "Andrea", "Kurt", "Library", "Haj"};
 
 int main(){
     string randomWord = pickRandomWord();
@@ -17,9 +17,16 @@ int main(){
     string guess;
     cout<< "Guess either a letter or a word"<< "\n";
     printHangMan();
+    cout << "Random word"<< "\n";
+    for (int i = 0; i < randomWord.length(); i++){
+        cout << "_";
+    }
+    cout<< "\n";
     while (!isDone){
         cin>>guess;
 
+
+        string temp = "Hello";
         if (guess == randomWord){
             cout<< "Correct the word was " << randomWord;
             isDone = true;
@@ -49,7 +56,7 @@ string pickRandomWord(){
     int ub = 5;
     srand(time(0));
     int random = (rand() % (ub - lb + 1)) + lb;
-    return array[random];
+    return wordArray[random];
 }
 
 void printHangMan(){
