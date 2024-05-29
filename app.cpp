@@ -12,7 +12,7 @@ void printHangMan(int state);
 bool isAWord(string s);
 bool validGuess(string s);
 string fillShowCase(string word);
-valarray<string> array = {"KAJ", "ANDREA", "KURT", "LIBRARY", "HAJ"};
+valarray<string> wordArray = {"KAJ", "ANDREA", "KURT", "LIBRARY", "HAJ"};
 valarray<string> wrongGuessesList = {};
 string randomWord = "";
 int wrongGuesses = 0;
@@ -130,10 +130,10 @@ bool isAWord(string s){
 */
 string pickRandomWord(){
     int lb = 0;
-    int ub = array.size();
+    int ub = wordArray.size();
     srand(time(0));
     int random = (rand() % (ub - lb + 1)) + lb;
-    return array[random];
+    return wordArray[random];
 }
 
 /**
