@@ -3,8 +3,8 @@
 #include <ctime>
 #include <vector>
 #include <ctype.h>
-#include <fstream>
 #include <algorithm>
+#include "header.h" // Header with classes and functions not directly involved in the gameLoop() function
 using namespace std;
 
 void gameLoop();
@@ -18,36 +18,30 @@ string randomWord;
 string* rWordPtr = &randomWord;
 int wrongGuesses = 0;
 vector<string> wrongVector;
-/**
- * Helper class to read file for the words to guess during the game
-*/
-class fileReader{
-    public:
-    fileReader(string path){
-        reader.open(path);
-    }
-    /**
-     * Reads the file from the given path and saves all elements into wordVector
-     * @param path the path to the given file
-    */
-    void readFile(){
-        if (reader.is_open()){
-            string temp;
-          while (getline(reader, temp)){
-            wordVector.push_back(temp);
-            }
-            reader.close();  
-        }   
-    }
 
-    private:
-    fstream reader;
-};
+
 
 int main(){
     fileReader reader("words.txt");
-    reader.readFile();
-    gameLoop();
+    wordVector = reader.readFile();
+    bool playing = true;
+    while (playing)
+    {
+      gameLoop();
+      cout << "To play again type 1\n";
+      cout << "To quit type 2\n";
+      string s;
+      cin >> s;
+      if (s == "2"){
+        playing = false;
+      } else {
+        wrongGuesses = 0;
+        wrongVector.clear();
+      }
+    }
+    
+    
+    
     return 0;
 }
 /**
@@ -56,7 +50,6 @@ int main(){
 void gameLoop(){
     cout << "-- HANGMAN --\n";
     randomWord = pickRandomWord();
-    // cout << randomWord << "\n";
     string showCase = fillShowCase(*rWordPtr);
     bool isDone = false;
     string guess;
@@ -73,22 +66,19 @@ void gameLoop(){
         if (validGuess(guess)){
             if (isAWord(guess)){
                 // Check if guessed word is correct and fill in on showCase
-                if (guess == randomWord){
+                if (guess == *rWordPtr){
                     isDone = true;
-                    cout << "Correct! The word was: " << randomWord << "\n";
+                    cout << "Correct! The word was: " << *rWordPtr << "\n";
                 } else {
-                    //TODO Replace with a method
                     wrongGuesses++;
                     cout << "-- HANGMAN --\n";
                     printHangMan(wrongGuesses);
                     if (wrongGuesses > 9){
-                        cout << "You ran out of guesses... The word was: " << randomWord << "\n";
+                        cout << "You ran out of guesses... The word was: " << *rWordPtr << "\n";
                         isDone = true;
                     }
                 }
             } else {
-                // Guess is a letter check the word for any and all instances of said letter
-                //TODO Perhaps shorten this into a method if possible
                 int idx = randomWord.find(guess);
                 if (idx != -1){
                  for (int i = 0; i < randomWord.length(); i++){
@@ -98,19 +88,17 @@ void gameLoop(){
                  }
                  if (showCase.find("_") == -1){
                     isDone = true;
-                    cout << "Correct! The word was: " << randomWord << "\n";
+                    cout << "Correct! The word was: " << *rWordPtr << "\n";
                  }   
                 }else {
-                    //TODO Replace with a method
                     wrongVector.push_back(guess);
                     wrongGuesses++;
                     cout << "-- HANGMAN --\n";
                     printHangMan(wrongGuesses);
                     if (wrongGuesses > 9){
-                        cout << "You ran out of guesses... The word was: " << randomWord << "\n";
+                        cout << "You ran out of guesses... The word was: " << *rWordPtr << "\n";
                         isDone = true;
                     }
-                    // A list of wrong guessed letters here and print progress of hangman tree
                 }
                 
             }
@@ -157,110 +145,4 @@ string pickRandomWord(){
     srand(time(0));
     int random = (rand() % (ub - lb + 1)) + lb;
     return wordVector[random];
-}
-
-/**
- * Fills the showcase to show progress when guessing letters
- * @param word the randomly picked word 
- * @return the showcasse with correct amounts of _
-*/
-string fillShowCase(string word){
-    string showCase;
-    for (int i = 0; i < word.length(); i++){
-        showCase.append("_");
-    }
-    return showCase;
-}
-
-
-//TODO If possible find alternative here cuz its ugly af (like zimmer)
-/**
- * Prints the state of the game according to the amount of guesses the player has wrong. It is very long due to the art. Sorry Bjarne
- * @param state the amount of wrong guesses the player has
-*/
-void printHangMan(int state){
-
-    switch (state)
-    {
-    case 1: 
-        cout<<"    "<<"\n";
-        cout<<"    "<<"\n";
-        cout<<"    "<<"\n";
-        cout<<"    "<<"\n";
-        cout<<"    "<<"\n";
-        cout<<" __________"<<"\n";
-        break;
-    case 2:
-        cout<<"     "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 3:
-        cout<<"    _______"<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|    "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 4:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 5:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 6:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 7:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|    /|"<<"\n";
-        cout<<"|      "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 8:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|    /|\\"<<"\n";
-        cout<<"|        "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    case 9:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|    /|\\"<<"\n";
-        cout<<"|    /   "<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    default:
-        cout<<"    _______"<<"\n";
-        cout<<"|     |"<<"\n";
-        cout<<"|     O"<<"\n";
-        cout<<"|    /|\\"<<"\n";
-        cout<<"|    / \\"<<"\n";
-        cout<<"|__________"<<"\n";
-        break;
-    }
 }

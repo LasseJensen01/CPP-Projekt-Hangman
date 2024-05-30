@@ -8,6 +8,7 @@
         "vector": "cpp",
         "initializer_list": "cpp",
         "tuple": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "iostream": "cpp"
     }
 }
