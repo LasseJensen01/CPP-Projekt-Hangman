@@ -13,9 +13,11 @@ void printHangMan(int state);
 bool isAWord(string s);
 bool validGuess(string s);
 string fillShowCase(string word);
-vector<string> tempArray;
-string randomWord = "";
+vector<string> wordVector;
+string randomWord;
+string* rWordPtr = &randomWord;
 int wrongGuesses = 0;
+vector<string> wrongVector;
 
 class fileReader{
     public:
@@ -27,7 +29,7 @@ class fileReader{
         if (reader.is_open()){
             string temp;
           while (getline(reader, temp)){
-            tempArray.push_back(temp);
+            wordVector.push_back(temp);
             }
             reader.close();  
         }   
@@ -48,12 +50,17 @@ void gameLoop(){
     cout << "-- HANGMAN --\n";
     randomWord = pickRandomWord();
     // cout << randomWord << "\n";
-    string showCase = fillShowCase(randomWord);
+    string showCase = fillShowCase(*rWordPtr);
     bool isDone = false;
     string guess;
     cout<< "Guess either a letter or a word"<< "\n";
     while (!isDone){
         cout << "Progress: " << showCase << "\n";
+        cout << "Previous guesses: ";
+        for (string s : wrongVector){
+            cout << s << ", ";
+        }
+        cout << "\n";
         cin>>guess;
         transform(guess.begin(), guess.end(), guess.begin(), ::toupper);
         if (validGuess(guess)){
@@ -88,6 +95,7 @@ void gameLoop(){
                  }   
                 }else {
                     // Replace with a method
+                    wrongVector.push_back(guess);
                     wrongGuesses++;
                     cout << "-- HANGMAN --\n";
                     printHangMan(wrongGuesses);
@@ -138,10 +146,10 @@ bool isAWord(string s){
 */
 string pickRandomWord(){
     int lb = 0;
-    int ub = tempArray.size();
+    int ub = wordVector.size();
     srand(time(0));
     int random = (rand() % (ub - lb + 1)) + lb;
-    return tempArray[random];
+    return wordVector[random];
 }
 
 /**
