@@ -1,8 +1,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <valarray> //Opfylder STL Requirement :D
+#include <vector>
 #include <ctype.h>
+#include <fstream>
 #include <algorithm>
 using namespace std;
 
@@ -12,34 +13,41 @@ void printHangMan(int state);
 bool isAWord(string s);
 bool validGuess(string s);
 string fillShowCase(string word);
-valarray<string> wordArray = {"KAJ", "ANDREA", "KURT", "LIBRARY", "HAJ"};
-valarray<string> wrongGuessesList = {};
+vector<string> tempArray;
 string randomWord = "";
 int wrongGuesses = 0;
 
-int main(){
-    // cout << "______" << "\n";
-    // string pickedWord = "Elephant";
-    // string guess = "muchogrande";
-    // transform(guess.begin(), guess.end(), guess.begin(), ::toupper); // Converts input into Uppercase through magical means...
-    // cout << guess << "\n";
-    // if (validGuess(guess)){
-    //     if (isAWord(guess)){
-    //         cout << "You guessed a word: " << guess << "\n";
-    //     } else{
-    //         int idx = pickedWord.find(guess);
-    //         cout << "Guess is in word: " << idx << "\n";
-    //         cout << "You guessed a letter: " << guess << "\n"; 
-    //     } 
-    // }else cout << "Your guess is invalid: " << guess << "\n";
-    gameLoop();
+class fileReader{
+    public:
+    fileReader(string path){
+        reader.open(path);
+    }
 
+    void readFile(){
+        if (reader.is_open()){
+            string temp;
+          while (getline(reader, temp)){
+            tempArray.push_back(temp);
+            }
+            reader.close();  
+        }   
+    }
+
+    private:
+    fstream reader;
+};
+
+int main(){
+    fileReader reader("words.txt");
+    reader.readFile();
+    gameLoop();
     return 0;
 }
 
 void gameLoop(){
     cout << "-- HANGMAN --\n";
     randomWord = pickRandomWord();
+    // cout << randomWord << "\n";
     string showCase = fillShowCase(randomWord);
     bool isDone = false;
     string guess;
@@ -130,10 +138,10 @@ bool isAWord(string s){
 */
 string pickRandomWord(){
     int lb = 0;
-    int ub = wordArray.size();
+    int ub = tempArray.size();
     srand(time(0));
     int random = (rand() % (ub - lb + 1)) + lb;
-    return wordArray[random];
+    return tempArray[random];
 }
 
 /**
@@ -148,6 +156,7 @@ string fillShowCase(string word){
     }
     return showCase;
 }
+
 
 // If possible find alternative here cuz its ugly af (like zimmer)
 /**
