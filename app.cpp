@@ -18,13 +18,18 @@ string randomWord;
 string* rWordPtr = &randomWord;
 int wrongGuesses = 0;
 vector<string> wrongVector;
-
+/**
+ * Helper class to read file for the words to guess during the game
+*/
 class fileReader{
     public:
     fileReader(string path){
         reader.open(path);
     }
-
+    /**
+     * Reads the file from the given path and saves all elements into wordVector
+     * @param path the path to the given file
+    */
     void readFile(){
         if (reader.is_open()){
             string temp;
@@ -45,7 +50,9 @@ int main(){
     gameLoop();
     return 0;
 }
-
+/**
+ * Game Loop function to run the game
+*/
 void gameLoop(){
     cout << "-- HANGMAN --\n";
     randomWord = pickRandomWord();
@@ -70,7 +77,7 @@ void gameLoop(){
                     isDone = true;
                     cout << "Correct! The word was: " << randomWord << "\n";
                 } else {
-                    // Replace with a method
+                    //TODO Replace with a method
                     wrongGuesses++;
                     cout << "-- HANGMAN --\n";
                     printHangMan(wrongGuesses);
@@ -81,7 +88,7 @@ void gameLoop(){
                 }
             } else {
                 // Guess is a letter check the word for any and all instances of said letter
-                // Perhaps shorten this into a method if possible
+                //TODO Perhaps shorten this into a method if possible
                 int idx = randomWord.find(guess);
                 if (idx != -1){
                  for (int i = 0; i < randomWord.length(); i++){
@@ -94,7 +101,7 @@ void gameLoop(){
                     cout << "Correct! The word was: " << randomWord << "\n";
                  }   
                 }else {
-                    // Replace with a method
+                    //TODO Replace with a method
                     wrongVector.push_back(guess);
                     wrongGuesses++;
                     cout << "-- HANGMAN --\n";
@@ -166,7 +173,7 @@ string fillShowCase(string word){
 }
 
 
-// If possible find alternative here cuz its ugly af (like zimmer)
+//TODO If possible find alternative here cuz its ugly af (like zimmer)
 /**
  * Prints the state of the game according to the amount of guesses the player has wrong. It is very long due to the art. Sorry Bjarne
  * @param state the amount of wrong guesses the player has
