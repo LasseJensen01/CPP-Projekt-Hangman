@@ -55,47 +55,46 @@ void gameLoop(){
     string guess;
     cout<< "Guess either a letter or a word"<< "\n";
     while (!isDone){
+        cout << "-- HANGMAN --\n";
+        printHangMan(wrongGuesses);
         cout << "Progress: " << showCase << "\n";
         cout << "Previous guesses: ";
-        for (string s : wrongVector){
+        for (string s : wrongVector){ // Displays all wrong previous letter guesses
             cout << s << ", ";
         }
         cout << "\n";
         cin>>guess;
-        transform(guess.begin(), guess.end(), guess.begin(), ::toupper);
-        if (validGuess(guess)){
-            if (isAWord(guess)){
-                // Check if guessed word is correct and fill in on showCase
-                if (guess == *rWordPtr){
+        transform(guess.begin(), guess.end(), guess.begin(), ::toupper); // Transforms the guess into uppercase
+        if (validGuess(guess)){ // Checks if the guess is valid
+            if (isAWord(guess)){ // Checks if the guess is a word or a letter
+                if (guess == *rWordPtr){// Check if guessed word is correct and fill in on showCase
                     isDone = true;
                     cout << "Correct! The word was: " << *rWordPtr << "\n";
                 } else {
                     wrongGuesses++;
-                    cout << "-- HANGMAN --\n";
-                    printHangMan(wrongGuesses);
                     if (wrongGuesses > 9){
                         cout << "You ran out of guesses... The word was: " << *rWordPtr << "\n";
                         isDone = true;
                     }
                 }
             } else {
-                int idx = randomWord.find(guess);
+                int idx = randomWord.find(guess); // Finds the index of the guess, if it is not in the word will return -1
                 if (idx != -1){
-                 for (int i = 0; i < randomWord.length(); i++){
+                 for (int i = 0; i < randomWord.length(); i++){ // Goes through random word and reveals all the instances of the the guess.
+                 // Dosen't use idx param since more instances could of guess could appear in the word and the find method only reveals the first
                     if (randomWord[i] == guess[0]){
                         showCase[i] = guess[0];
                     }
                  }
-                 if (showCase.find("_") == -1){
+                 if (showCase.find("_") == -1){ // Checks wether or not any more blankspaces are in the random word if not, the game is done
                     isDone = true;
                     cout << "Correct! The word was: " << *rWordPtr << "\n";
                  }   
                 }else {
                     wrongVector.push_back(guess);
                     wrongGuesses++;
-                    cout << "-- HANGMAN --\n";
-                    printHangMan(wrongGuesses);
                     if (wrongGuesses > 9){
+                        printHangMan(wrongGuesses);
                         cout << "You ran out of guesses... The word was: " << *rWordPtr << "\n";
                         isDone = true;
                     }

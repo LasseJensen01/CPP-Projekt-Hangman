@@ -56,6 +56,14 @@ void printHangMan(int state){
 
     switch (state)
     {
+    case 0:
+        cout<<"    "<<"\n";
+        cout<<"    "<<"\n";
+        cout<<"    "<<"\n";
+        cout<<"    "<<"\n";
+        cout<<"    "<<"\n";
+        cout<<"    "<<"\n";
+        break;
     case 1: 
         cout<<"    "<<"\n";
         cout<<"    "<<"\n";
