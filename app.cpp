@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <vector>
+#include <vector> // STL Req
 #include <ctype.h>
 #include <algorithm>
 #include "header.h" // Header with classes and functions not directly involved in the gameLoop() function
