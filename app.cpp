@@ -73,6 +73,7 @@ void gameLoop(){
                 } else {
                     wrongGuesses++;
                     if (wrongGuesses > 9){
+                        printHangMan(wrongGuesses);
                         cout << "You ran out of guesses... The word was: " << *rWordPtr << "\n";
                         isDone = true;
                     }
